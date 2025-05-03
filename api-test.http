@@ -1,0 +1,54 @@
+POST http://localhost:8000/api/music-task/register
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Alejandro ",
+  "lastname": "Castro",
+  "email": "alejo@example.com",
+  "password": "1234"
+}
+
+### login
+
+
+POST http://localhost:8000/api/music-task/login
+Accept: application/json
+Content-Type: application/json
+
+{
+"email": "alejo@example.com",
+"password": "1234"
+}
+
+### crear task
+
+POST http://localhost:8000/api/music-task/create
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3NDYyMTY2NjUsImV4cCI6MTc0NjIyMDI2NSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoiYWxlam9AZXhhbXBsZS5jb20ifQ.LtKMC34NaXPrcEyngENkEKflwQ-WV-ysFvDXUwWMVe91CU7gQtzRvGjfZFAZIQ26ufA6LNfcun8_Pys8xZRvJxjo3dqm1GngfRYyBFfNr7LvjTwDwnX--oeRSSzvmR-MjTMxElMJwU6gQrZu8FSQkZeEGPfQu4KOJ28wZnDf0TFaDnus0KFLIJcrsgMALx9A43cNYXw19OJCPVUzP-8gnw52LG1FPI7bTBMR0b24S2lJ7EnmLQMv0VS-6SZSjs-9vF7lJ_g8JhH6gxPFAdZf9QC6G-RX1mAd_i_hU-qjBI5mdtxMQ75jy1e-XLeHLGsSNbHu0PL5gp8U3-LkqOvOFg
+
+{
+  "title": "escala jazz show ",
+  "description": "Revisar cómo funcionan los validadores personalizados y el Authenticator",
+  "estimatedTime": "2024-06-30T14:00:00",
+  "date": "2024-06-30T10:00:00",
+  "category": "Technique",
+  "completed": false
+}
+
+
+### mostrar todas las tareas de un usuario autenticado
+
+GET http://localhost:8000/api/music-task/find
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3NDYyMTUzNTIsImV4cCI6MTc0NjIxODk1Miwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoibWFyaWFuYUBleGFtcGxlLmNvbSJ9.Ow0TYjWcN1yEkBtJXun__8HcLfCxi1Agt6m_wPoRWWoa5SwjqZH6KDWcAVNGe8XG64_rBnHUIYTquapDNE_MGxEGdHjnfs-rifsm0h0G_FJn0EFtMXCLaqMVhmmn2QzGvSnh1-i_Jp81ylgrKT0zfh3gIKtiP4CVxcM85UXOOTuiv_1HMDWNoVx4hLyyBbIm84UHyR36VZ196fl58EQLVXuGTpwv47OCXXx9gJt8qHFWpt0Y8hTW3Iayt022knl079LcCZQpPJG9pQQnvUOH2eEQrCfJgLgL_sdjtPDKnU57KMl3i5ZAmWQTxC5hJOKgkaLs71OeX7AoHL6qfkyvVg
+
+
+### mostrar todas las tareas de un usuario autenticado
+
+GET http://localhost:8000/api/music-task/find/2
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3NDYyMTY2NjUsImV4cCI6MTc0NjIyMDI2NSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoiYWxlam9AZXhhbXBsZS5jb20ifQ.LtKMC34NaXPrcEyngENkEKflwQ-WV-ysFvDXUwWMVe91CU7gQtzRvGjfZFAZIQ26ufA6LNfcun8_Pys8xZRvJxjo3dqm1GngfRYyBFfNr7LvjTwDwnX--oeRSSzvmR-MjTMxElMJwU6gQrZu8FSQkZeEGPfQu4KOJ28wZnDf0TFaDnus0KFLIJcrsgMALx9A43cNYXw19OJCPVUzP-8gnw52LG1FPI7bTBMR0b24S2lJ7EnmLQMv0VS-6SZSjs-9vF7lJ_g8JhH6gxPFAdZf9QC6G-RX1mAd_i_hU-qjBI5mdtxMQ75jy1e-XLeHLGsSNbHu0PL5gp8U3-LkqOvOFg

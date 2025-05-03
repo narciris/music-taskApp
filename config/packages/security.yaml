@@ -1,0 +1,39 @@
+security:
+    password_hashers:
+        App\Entity\User:
+            algorithm: auto
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        login:
+            pattern: ^/api/music-task/login
+            stateless: true
+            json_login:
+                check_path: /api/music-task/login
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            provider: app_user_provider
+            lazy: true
+
+        api:
+            pattern: ^/api
+            stateless: true
+            jwt: ~
+            provider: app_user_provider
+            lazy: true
+
+    access_control:
+        - { path: ^/api/music-task/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/music-task/register, roles: PUBLIC_ACCESS }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
