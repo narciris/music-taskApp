@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Dto\RequestDto\TaskRequestDto;
+use App\Dto\RequestDto\UpdateTaskRequestDto;
 use App\Dto\ResponseDto\TaskResponseDto;
 use App\Entity\Task;
 use App\Entity\User;
@@ -52,6 +53,7 @@ class TaskService
        $taskDto->setDescription($task->getDescription());
        $taskDto->setTimeEstimate(new \DateTime($task->getEstimatedTime()));
        $taskDto->setCreatedAt(($task->getDate()));
+       $taskDto->setCompleted($task->isCompleted());
 
        return $taskDto;
     }
@@ -63,7 +65,8 @@ class TaskService
         $task = new Task();
         $owner = $this->security->getUser();
 
-        $existingTask = $this->entityManager->getRepository(Task::class)->findOneBy([
+        $existingTask = $this->entityManager->
+        getRepository(Task::class)->findOneBy([
             'title' => trim($requestDto->getTitle())
         ]);
 
@@ -90,12 +93,67 @@ class TaskService
         return $this->mapToTaskResponseDto($task);
     }
 
-    public function finById(int $id) : TaskResponseDto
+    public function findById(int $id) : TaskResponseDto
+    {
+        $task = $this->taskRepository->find($id);
+        if (!$task || $task->getOwner()!== $this->security->getUser()) {
+            throw new \Exception("Tarea no encontrada o no autorizada", 403);
+        }
+
+        return $this->mapToTaskResponseDto($task);
+    }
+
+
+    public function updateTask(int $id, UpdateTaskRequestDto $requestDto) : TaskResponseDto
     {
         $task = $this->taskRepository->find($id);
         if(!$task){
-            throw new \Exception("Tarea no encontrada",400);
+            throw new \Exception(" la tarea no existe");
         }
+        if($task->getOwner() !== $this->security->getUser() ){
+            throw new \Exception("tarea no le pertenece", 403);
+        }
+
+        if($requestDto->getTitle() !== $task->getTitle() && !empty($requestDto->getTitle())){
+            $task->setTitle($requestDto->getTitle());
+        }
+        if(!empty($requestDto->getDescription())){
+            $task->setDescription($requestDto->getDescription());
+        }
+
+        if(!empty($requestDto->getDate())){
+            $task->setDate($requestDto->getDate());
+        }
+        if(!empty($requestDto->getCategory())){
+            $task->setCategory($requestDto->getCategory());
+        }
+
+        $this->entityManager->flush();
+
+        return $this->mapToTaskResponseDto($task);
+
+    }
+
+    public function deleteTask(int $id) : TaskResponseDto
+    {
+        $task = $this->taskRepository->find($id);
+        if(!$task || $task->getOwner()!== $this->security->getUser()) {
+            throw new \Exception("Tarea no encontrada o no autorizada", 403);
+        }
+        $this->entityManager->remove($task);
+        $this->entityManager->flush();
+        return $this->mapToTaskResponseDto($task);
+    }
+
+    public function changeStatus(int $id ): TaskResponseDto
+    {
+        $task = $this->taskRepository->find($id);
+        if(!$task){
+            throw new \Exception("tarea no disponible");
+        }
+
+        $task->setCompleted(true);
+        $this->entityManager->flush();
         return $this->mapToTaskResponseDto($task);
     }
 }

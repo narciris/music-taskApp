@@ -10,6 +10,8 @@ class TaskResponseDto implements \JsonSerializable
    private \DateTime $timeEstimate;
    private \DateTime $createdAt;
 
+   private bool $completed;
+
     public function getTimeEstimate(): \DateTime
     {
         return $this->timeEstimate;
@@ -66,6 +68,18 @@ class TaskResponseDto implements \JsonSerializable
         $this->description = $description;
     }
 
+    public function isCompleted(): bool
+    {
+        return $this->completed;
+    }
+
+    public function setCompleted(bool $completed): void
+    {
+        $this->completed = $completed;
+    }
+
+
+
 
     public function jsonSerialize(): mixed
     {
@@ -75,6 +89,7 @@ class TaskResponseDto implements \JsonSerializable
             'description' => $this->description,
             'timeEstimate' => $this->timeEstimate,
             'createdAt' => $this->createdAt,
+            'completed' => $this->completed,
 
         ];
     }

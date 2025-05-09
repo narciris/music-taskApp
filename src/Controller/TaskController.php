@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Dto\RequestDto\TaskRequestDto;
+use App\Dto\RequestDto\UpdateTaskRequestDto;
 use App\Service\TaskService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -11,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use function Symfony\Component\String\u;
 
 #[Route('api/music-task')]
 class TaskController extends AbstractController
@@ -91,7 +93,7 @@ class TaskController extends AbstractController
     {
         try {
 
-            $taskFind = $this->serviceTask->taskFindUser($id);
+            $taskFind = $this->serviceTask->findById($id);
             return new JsonResponse(
                 $taskFind,
                 Response::HTTP_OK
@@ -99,6 +101,58 @@ class TaskController extends AbstractController
         }  catch (\Exception $e) {
             return new JsonResponse(
                 ['error' => 'An error occurred while finding the task: ' . $e->getMessage()],
+            );
+        }
+    }
+
+    #[Route('/update/{id}',name: 'app_update',methods: ['PUT'])]
+    public function update(int $id,
+                           Request $request) : JsonResponse
+
+    {
+        try {
+            $requestDto =   $this->serializer->deserialize($request->getContent(),
+                UpdateTaskRequestDto::class, 'json');
+
+            $taskResponse = $this->serviceTask->updateTask($id,$requestDto);
+            return  new JsonResponse(
+                $taskResponse,Response::HTTP_OK
+            );
+        }catch (\Exception $e) {
+            return new JsonResponse(
+                ["error"=> "ha ocurrido un error: " . $e->getMessage()]
+            );
+        }
+
+
+    }
+
+    #[Route('/delete/{id}',name: 'app_delete',methods: ['DELETE'])]
+    public function delete(int $id): JsonResponse
+    {
+        try {
+            $task = $this->serviceTask->findById($id);
+            return new  JsonResponse(
+                $task,Response::HTTP_OK
+            );
+        }catch (\Exception $e) {
+            return new JsonResponse(
+                ['error' => 'ha ocurrido un error'], $e->getMessage()
+            );
+        }
+    }
+
+    #[Route('/complete/{id}',name: 'complete_task',methods: ['PATCH'])]
+    public function changeStatus(int $id): JsonResponse
+    {
+        try{
+           $task = $this->serviceTask->changeStatus($id);
+            return new JsonResponse(
+                $task,Response::HTTP_OK
+            );
+        }catch (\Exception $e) {
+            return new JsonResponse(
+                ['error'=> 'ha ocurrido un error'], $e->getMessage()
             );
         }
     }
